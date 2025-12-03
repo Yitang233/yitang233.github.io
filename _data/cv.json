@@ -1,152 +1,180 @@
 {
   "basics": {
-    "name": "Your Sidebar Name",
-    "email": "none@example.org",
-    "phone": "",
-    "website": "https://academicpages.github.io",
-    "summary": "Currently employed at Red Brick University. Short biography for the left-hand sidebar",
+    "name": "Yitang Gao",
+    "email": "",
+    "phone": "+852 5449-7757",
+    "website": "https://yitang233.github.io",
+    "summary": "HKUST CS student researching inference-time control of LMs, efficient RAG, and long-context AI.",
     "location": {
       "address": "",
       "postalCode": "",
-      "city": "Earth",
-      "countryCode": "US",
-      "region": ""
+      "city": "Hong Kong",
+      "countryCode": "HK",
+      "region": "Hong Kong SAR"
     },
-    "profiles": [
-      {
-        "network": "Google Scholar",
-        "username": "",
-        "url": "https://scholar.google.com/citations?user=PS_CX0AAAAAJ"
-      },
-      {
-        "network": "ORCID",
-        "username": "",
-        "url": "https://orcid.org/yourorcidurl"
-      },
-      {
-        "network": "GitHub",
-        "username": "academicpages",
-        "url": "https://github.com/academicpages"
-      }
-    ]
+    "profiles": []
   },
-  "work": [],
+  "work": [
+    {
+      "company": "HKUST LONG Group",
+      "position": "Final Year Thesis Student (advisor: Prof. Long Chen)",
+      "website": "",
+      "startDate": "2025-09-01",
+      "endDate": "",
+      "summary": "Inference-time classifier-free guidance for autoregressive LMs; decoding/steering to reduce hallucinations; long-context evaluation harnesses and ablations."
+    },
+    {
+      "company": "Cornell University — Database Systems Lab",
+      "position": "Research Intern (advisor: Prof. Sainyam Galhotra)",
+      "website": "",
+      "startDate": "2025-06-01",
+      "endDate": "2025-11-01",
+      "summary": "Auto Pruned Retriever (VLDB submission, under review); token/latency-efficient RAG via reasoning subgraphs; edge-space retrieval with top-k frontier sentence encodings and top-m rerank; scalable causal discovery for SEEKER."
+    },
+    {
+      "company": "HKUST Accounting Department",
+      "position": "Undergraduate Research Assistant (advisor: Prof. Yue Zheng)",
+      "website": "",
+      "startDate": "2024-08-01",
+      "endDate": "2024-10-31",
+      "summary": "Built OCR→DB pipeline for 657 noisy scans; Tesseract + heuristic post-processing; extracted file–keyword–text triplets; reduced complexity O(n^4)→O(n^2) with ~20× speedup."
+    },
+    {
+      "company": "HKUST NLP Group",
+      "position": "Undergraduate Research Assistant (advisor: Prof. Junxian He)",
+      "website": "",
+      "startDate": "2024-01-01",
+      "endDate": "2024-05-31",
+      "summary": "Long as a Tale long-video pipeline (taxonomy→retrieval→filtering); curated ~4.5K hour-long videos; subtitle-to-description generation; long-context training/eval to 224K context and 400 frames; automated Video-MME, V-NIAH, MLVU, LVBench with reported gains."
+    }
+  ],
   "education": [
     {
-      "institution": "GitHub University",
-      "area": "Ph.D in Version Control Theory",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2018",
-      "gpa": null,
-      "courses": []
+      "institution": "The Hong Kong University of Science and Technology",
+      "area": "BEng in Computer Science",
+      "studyType": "BEng",
+      "startDate": "2022-09-01",
+      "endDate": "2026-06-30",
+      "gpa": "4.126/4.30 (rank 2/145)",
+      "courses": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "Large-Scale ML for Foundation Models",
+        "Big Data Mining/Management",
+        "Data Visualization",
+        "Algorithms",
+        "Operating Systems",
+        "Software Engineering",
+        "OOP & Data Structures",
+        "Computer Organization",
+        "Linear Algebra",
+        "Probability and Statistics"
+      ]
     },
     {
-      "institution": "GitHub University",
-      "area": "M.S. in Jekyll",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2014",
-      "gpa": null,
-      "courses": []
-    },
-    {
-      "institution": "GitHub University",
-      "area": "B.S. in GitHub",
-      "studyType": "",
-      "startDate": "",
-      "endDate": "2012",
+      "institution": "Cornell University",
+      "area": "Visiting Research Student, Database Systems Lab",
+      "studyType": "Visiting Student",
+      "startDate": "2025-06-01",
+      "endDate": "2025-08-31",
       "gpa": null,
       "courses": []
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "name": "Programming",
+      "level": "",
+      "keywords": ["Python", "Java", "C/C++", "SQL", "Bash", "HTML", "LaTeX"]
+    },
+    {
+      "name": "Libraries/Tools",
+      "level": "",
+      "keywords": ["PyTorch", "Hugging Face", "Pandas", "OpenCV", "Docker", "Git", "Linux"]
+    },
+    {
+      "name": "Research Interests",
+      "level": "",
+      "keywords": ["Inference-time control of LMs", "Efficient & multimodal AI", "Long-context modeling", "Data mining"]
+    }
+  ],
   "languages": [],
-  "interests": [],
+  "interests": [
+    {
+      "name": "Music",
+      "keywords": ["Piano (Level 10)", "listening"]
+    },
+    {
+      "name": "Outdoors",
+      "keywords": ["hiking"]
+    },
+    {
+      "name": "Cooking",
+      "keywords": ["home cooking"]
+    }
+  ],
   "references": [],
   "publications": [
     {
-      "name": "Paper Title Number 1",
-      "publisher": "Journal 1",
-      "releaseDate": "2009-10-01",
-      "website": "https://academicpages.github.io/files/paper1.pdf",
-      "summary": "This paper is about the number 1. The number 2 is left for future work."
+      "name": "Auto Pruned Retriever",
+      "publisher": "Under review (VLDB submission)",
+      "releaseDate": "2025-11-01",
+      "website": "",
+      "summary": "Token/latency-efficient RAG via a persistent reasoning subgraph with edge-space retrieval and frontier sentence encodings."
     },
     {
-      "name": "Paper Title Number 2",
-      "publisher": "Journal 1",
-      "releaseDate": "2010-10-01",
-      "website": "https://academicpages.github.io/files/paper2.pdf",
-      "summary": "This paper is about the number 2. The number 3 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 3",
-      "publisher": "Journal 1",
-      "releaseDate": "2015-10-01",
-      "website": "https://academicpages.github.io/files/paper3.pdf",
-      "summary": "This paper is about the number 3. The number 4 is left for future work."
-    },
-    {
-      "name": "Paper Title Number 4",
-      "publisher": "GitHub Journal of Bugs",
-      "releaseDate": "2024-02-17",
-      "website": "https://academicpages.github.io/files/paper3.pdf",
-      "summary": "This paper is about fixing template issue #693."
+      "name": "Long as a Tale: Unlocking Long-Video Context in VLMs with Hour-long Data",
+      "publisher": "In preparation",
+      "releaseDate": "2024-08-01",
+      "website": "",
+      "summary": "Long-video data pipeline (~4.5K hour-long videos) and long-context VLM training/eval up to 224K context and 1,200 frames."
     }
   ],
-  "presentations": [
-    {
-      "name": "Talk 1 on Relevant Topic in Your Field",
-      "event": "UC San Francisco, Department of Testing",
-      "date": "2012-03-01",
-      "location": "San Francisco, CA, USA",
-      "description": ""
-    },
-    {
-      "name": "Tutorial 1 on Relevant Topic in Your Field",
-      "event": "UC-Berkeley Institute for Testing Science",
-      "date": "2013-03-01",
-      "location": "Berkeley, CA, USA",
-      "description": ""
-    },
-    {
-      "name": "Talk 2 on Relevant Topic in Your Field",
-      "event": "London School of Testing",
-      "date": "2014-02-01",
-      "location": "London, UK",
-      "description": ""
-    },
-    {
-      "name": "Conference Proceeding talk 3 on Relevant Topic in Your Field",
-      "event": "Testing Institute of America 2014 Annual Conference",
-      "date": "2014-03-01",
-      "location": "Los Angeles, CA, USA",
-      "description": ""
-    }
-  ],
+  "presentations": [],
   "teaching": [
     {
-      "course": "Teaching experience 1",
-      "institution": "University 1, Department",
-      "date": "2014-01-01",
-      "role": "Undergraduate course",
-      "description": ""
+      "course": "COMP2211 Exploring Artificial Intelligence",
+      "institution": "HKUST",
+      "date": "2024-08-01",
+      "role": "Undergraduate Teaching Assistant (Jul–Aug 2024 & Jul–Aug 2025)",
+      "description": "Designed labs with notes, instructions, solutions, and autograders; held office hours (~200 students)."
     },
     {
-      "course": "Teaching experience 2",
-      "institution": "University 1, Department",
-      "date": "2015-01-01",
-      "role": "Workshop",
-      "description": ""
+      "course": "COMP1023 Introduction to Python",
+      "institution": "HKUST",
+      "date": "2024-12-01",
+      "role": "Undergraduate Teaching Assistant (Sep–Dec 2024)",
+      "description": "Created beginner-friendly labs with interactive UIs and autograders; converted coding tasks into small projects (~800 students/term)."
+    },
+    {
+      "course": "COMP2012 OOP & Data Structures",
+      "institution": "HKUST",
+      "date": "2024-05-01",
+      "role": "Undergraduate Teaching Assistant (Jan–May 2024)",
+      "description": "Led lab sections (~90 students per session), demoed data-structure implementations, and answered live Q&A."
     }
   ],
   "portfolio": [
     {
-      "name": "Portfolio item number 1",
+      "name": "Independent Quantitative Research Stack",
       "category": "portfolio",
-      "date": "",
+      "date": "2025-09-01",
       "url": "",
-      "description": "Short description of portfolio item number 1<br/><img src='/images/500x300.png'>"
+      "description": "Equity data stack (yfinance → SQLite → ClickHouse); factor mining/backtesting in Python + PyO3/Rust; tested equal-weight, market-neutral portfolios."
+    },
+    {
+      "name": "Long as a Tale: Hour-long Video Pipeline",
+      "category": "portfolio",
+      "date": "2024-08-01",
+      "url": "",
+      "description": "Taxonomy-driven retrieval and three-stage filtering to curate ~4.5K hour-long videos; subtitle-to-description generation; long-context VLM training/eval."
+    },
+    {
+      "name": "Auto Pruned Retriever (Prototype)",
+      "category": "portfolio",
+      "date": "2025-11-01",
+      "url": "",
+      "description": "Token/latency-efficient RAG via reasoning subgraph and edge-space retrieval; VLDB submission under review."
     }
   ]
 }

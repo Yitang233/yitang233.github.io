@@ -1,0 +1,173 @@
+%===========================%
+%        YITANG GAO        %
+%===========================%
+\documentclass[11pt]{article}
+
+% ---------- Packages ----------
+\usepackage[margin=0.8in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext}   % Times-like serif for a formal look
+\usepackage{microtype}
+
+% ---------- Section styling (bold caps + rule) ----------
+\titleformat{\section}{\bfseries\Large}{}{0pt}{}[\vspace{2pt}\titlerule]
+\titlespacing*{\section}{0pt}{8pt plus 2pt minus 2pt}{6pt}
+
+% ---------- Global spacing ----------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+% Tight spacing INSIDE entries (title→bullets), normal line spacing for bullets
+\setlist[itemize]{leftmargin=*, topsep=0pt, partopsep=0pt, parsep=0pt, itemsep=2pt}
+
+% ---------- Entry helpers ----------
+% Org + location line
+\newcommand{\orgloc}[2]{\noindent\textbf{#1}\hfill #2\\}
+
+% Role + date line — tighten space BEFORE bullets to remove the "red gap"
+\newcommand{\roledate}[2]{\textit{#1}\hfill #2\\[-11pt]}
+% Education role/date — keep slightly more room so CGA line doesn't collide
+\newcommand{\roledateedu}[2]{\textit{#1}\hfill #2\\[0pt]}
+
+% Gap BETWEEN entries (the "green gap"): visible but compact
+\newcommand{\entrygap}{\vspace{12pt}}
+
+%===========================%
+\begin{document}
+
+% ---------- Header ----------
+{\fontsize{20}{22}\selectfont\textbf{YITANG GAO}}\\[1pt]
+Hong Kong SAR \,|\, +852 5449-7757 \,|\, \href{mailto:ygaocb@connect.ust.hk}{ygaocb@connect.ust.hk}
+
+\vspace{4pt} % clear gap before first section (similar to section spacing)
+
+%===========================%
+\section*{EDUCATION}
+
+\orgloc{The Hong Kong University of Science and Technology (HKUST)}{Hong Kong SAR}
+\roledateedu{BEng in Computer Science}{Sep 2022--Jun 2026 (expected)}
+CGA: \textbf{4.126/4.30};  Rank: \textbf{2/145};  Dean’s List every term.\\
+TOEFL iBT: \textbf{108}.\\
+Selected Coursework: Artificial Intelligence; Machine Learning; Large-Scale ML for Foundation Models;\\
+Big Data Mining/Management; Data Visualization; OOP \& Data Structures; Algorithms; Operating Systems;\\
+Software Engineering; Computer Organization; Linear Algebra; Probability and Statistics.
+
+\entrygap
+
+\orgloc{Cornell University}{Ithaca, NY}
+\roledateedu{Visiting Research Student, Database Systems Lab}{Jun--Aug 2025}
+
+\vspace{-10pt} % Make it tighter
+
+%===========================%
+\section*{RESEARCH EXPERIENCE}
+
+\orgloc{HKUST LONG Group}{Hong Kong SAR}
+\roledate{Final Year Thesis (advisor: Prof.\ Long Chen)}{Sep 2025--Present}
+\begin{itemize}
+  \item Investigate inference-time classifier-free guidance for autoregressive LMs.
+  \item Design decoding/steering techniques to reduce hallucinations.
+  \item Build long-context eval harnesses; plan guidance-scaling ablations.
+\end{itemize}
+
+\entrygap
+
+\orgloc{Cornell University — Database Systems Lab}{Ithaca, NY}
+\roledate{Research Intern (advisor: Prof.\ Sainyam Galhotra)}{Jun--Nov 2025}
+\begin{itemize}
+  \item \textit{Auto Pruned Retriever} (VLDB submission, under review).
+  \item Co-develop token/latency‑efficient RAG via a persistent \emph{reasoning subgraph}.
+  \item Engineer edge‑space retrieval + top‑\(k\) frontier sentence encodings with top‑\(m\) re‑rank; \emph{per abstract}: similar accuracy with \(\sim\)1/20 LightRAG tokens and \(\sim\)1/3 generation latency.
+  \item Implement scalable causal discovery algorithm for the SEEKER project.
+\end{itemize}
+
+\entrygap
+
+\orgloc{HKUST Accounting Department}{Hong Kong SAR}
+\roledate{Undergraduate Research Assistant (advisor: Prof.\ Yue Zheng)}{Aug--Oct 2024}
+\begin{itemize}
+  \item Engineer OCR\(\rightarrow\)DB pipeline for 657 noisy/low‑res scanned complaints.
+  \item Integrate Tesseract with heuristic post‑processing to extract \texttt{[file]–[keyword]–[text]} triplets; reduce complexity from \(O(n^4)\) to \(O(n^2)\); speedup \(\sim 20\times\) (days\(\rightarrow\)hours).
+\end{itemize}
+
+\entrygap
+
+\orgloc{HKUST NLP Group}{Hong Kong SAR}
+\roledate{Undergraduate Research Assistant (advisor: Prof.\ Junxian He)}{Jan--May 2024}
+\begin{itemize}
+  \item \textit{Long as a Tale: Unlocking Long‑Video Context in VLMs with Hour‑long Data.}
+  \item Co‑design and implement hour‑long data pipeline: world‑knowledge taxonomy (6 categories/37 sub‑categories) \(\rightarrow\) YouTube retrieval \(\rightarrow\) three‑stage filtering (metadata: 20–60 min, \(\ge\)100 likes/\(\ge\)1{,}000 views; subtitle density: \(\ge\)100 chars/min, English; motion: CLIP cosine non‑similarity \(\ge\)0.8 for \(\ge\)50\% frames); curate \(\sim\)4.5K long videos.
+  \item Script subtitle\(\rightarrow\)description conversion: chunking + metadata‑aware LLM rephrasing; standardize prompts; produce \(\sim\)2.7K‑token descriptions/video; ensure reproducibility.
+  \item Set up long‑context training/eval: text‑only warm‑up to 224K context (RoPE \(\theta=10^9\)), 400‑frame video training; automate V‑NIAH, Video‑MME, MLVU, LVBench runs; \emph{paper outcomes}: +6.0 (Video‑MME long), +5.8 (medium), +0.7 (short), +3.4 (MLVU), +4.6 (LVBench); robust retrieval up to 1,200 frames.
+\end{itemize}
+
+
+
+%===========================%
+\section*{TEACHING EXPERIENCE}
+
+\orgloc{HKUST — COMP2211 \emph{Exploring Artificial Intelligence}}{Hong Kong SAR}
+\roledate{Undergraduate Teaching Assistant}{Jul--Aug 2024 \& Jul--Aug 2025}
+\begin{itemize}
+  \item \textbf{Designed} labs with background notes, step-by-step instructions, reference solutions, and \textbf{autograders}; \textbf{held} office hours (\(\sim\)200 students).
+\end{itemize}
+
+\entrygap
+
+\orgloc{HKUST — COMP1023 \emph{Introduction to Python}}{Hong Kong SAR}
+\roledate{Undergraduate Teaching Assistant}{Sep--Dec 2024}
+\begin{itemize}
+  \item \textbf{Created} beginner-friendly labs with interactive UIs and \textbf{autograders}; \textbf{converted} coding tasks into small game-like projects (\(\sim\)800 students/term).
+\end{itemize}
+
+\entrygap
+
+\orgloc{HKUST — COMP2012 \emph{OOP \& Data Structures}}{Hong Kong SAR}
+\roledate{Undergraduate Teaching Assistant}{Jan--May 2024}
+\begin{itemize}
+  \item \textbf{Led} lab sections (\(\sim\)90 students per session), \textbf{demoed} data-structure implementations, and \textbf{answered} live Q\&A.
+\end{itemize}
+
+%===========================%
+\section*{PROJECTS \& TRAINING}
+
+\orgloc{Independent Quantitative Research}{Hong Kong SAR}
+\roledate{Personal project}{Jul 2024--Sep 2025}
+\begin{itemize}
+  \item \textbf{Built} an equity stack: ingest daily/hourly data (e.g., \texttt{yfinance}) into \textbf{SQLite} then \textbf{ClickHouse}; \textbf{implemented} factor mining and backtesting with Python+\emph{PyO3}/Rust.
+  \item \textbf{Researched} and \textbf{combined} published factors; \textbf{tested} equal-weight, market-neutral portfolios; \textbf{standardized} cleaning and universe rules.
+\end{itemize}
+
+\entrygap
+
+\orgloc{LSE Summer School}{London, UK}
+\roledate{Fixed Income Securities \& Debt Markets}{Jul--Aug 2023}
+
+\orgloc{Fudan University Winter School}{Shanghai, China}
+\roledate{Probability, Statistics \& Risk Management}{Dec 2022--Jan 2023}
+
+%===========================%
+\section*{HONORS \& AWARDS}
+
+\noindent HKSAR Government Scholarship \hfill 2024--2026\\
+Asia-Pacific Economic Cooperation Scholarship \hfill 2024--2026\\
+Cornell IRIS Summer Scholarship \hfill 2025\\
+HKUST SENG International Summer Research Sponsorship \hfill 2025\\
+HKUST UROP Support Grant \hfill 2024\\
+Extra Mile Charity Foundation Scholarship \hfill 2023--2024\\
+University Scholarship Scheme for Continuing UG Students \hfill 2023--2024\\
+HKUST Study Abroad Grant \hfill 2023\\
+HKSAR Government Scholarship Fund — Talent Development Scholarship \hfill 2023--2024\\
+Dean’s List (every semester) \hfill 2022--2025
+
+%===========================%
+\section*{SKILLS \& INTERESTS}
+
+\textbf{Programming:} Python, Java, C/C++, SQL, Bash, HTML, \LaTeX \\
+\textbf{Libraries/Tools:} PyTorch, Hugging Face, Pandas, OpenCV, Docker, Git, Linux \\
+\textbf{Research interests:} Inference-time control of LMs; efficient \& multimodal AI; long-context modeling; data mining \\
+\textbf{Interests:} Piano (\textbf{Level 10} certificate), music, hiking/outdoors, cooking
+
+\end{document}

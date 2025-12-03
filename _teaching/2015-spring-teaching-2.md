@@ -1,20 +1,14 @@
 ---
-title: "Teaching experience 2"
+title: "COMP1023 Introduction to Python — Undergraduate TA"
 collection: teaching
-type: "Workshop"
-permalink: /teaching/2015-spring-teaching-1
-venue: "University 1, Department"
-date: 2015-01-01
-location: "City, Country"
+type: "Undergraduate course"
+permalink: /teaching/2024-comp1023-ta
+venue: "HKUST"
+date: 2024-12-01
+location: "Hong Kong SAR"
 ---
 
-This is a description of a teaching experience. You can use markdown like any other post.
+Undergraduate Teaching Assistant for COMP1023 in Sep–Dec 2024.
 
-Heading 1
-======
-
-Heading 2
-======
-
-Heading 3
-======
+- Created beginner-friendly labs with interactive UIs and autograders.
+- Converted coding tasks into small game-like projects (~800 students per term).

@@ -1,7 +1,7 @@
 ---
-title: "Portfolio item number 1"
-excerpt: "Short description of portfolio item number 1<br/><img src='/images/500x300.png'>"
+title: "Independent Quantitative Research Stack"
+excerpt: "Equity data pipeline (yfinance → SQLite → ClickHouse), factor mining/backtesting in Python + PyO3/Rust."
 collection: portfolio
 ---
 
-This is an item in your portfolio. It can be have images or nice text. If you name the file .md, it will be parsed as markdown. If you name the file .html, it will be parsed as HTML. 
+Built an end-to-end equity data stack: ingestion from yfinance to SQLite and ClickHouse, factor mining and backtesting in Python with PyO3/Rust components. Tested equal-weight and market-neutral portfolios with standardized cleaning and universe rules.

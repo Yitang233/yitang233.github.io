@@ -1,20 +1,14 @@
 ---
-title: "Teaching experience 1"
+title: "COMP2211 Exploring Artificial Intelligence — Undergraduate TA"
 collection: teaching
 type: "Undergraduate course"
-permalink: /teaching/2014-spring-teaching-1
-venue: "University 1, Department"
-date: 2014-01-01
-location: "City, Country"
+permalink: /teaching/2025-comp2211-ta
+venue: "HKUST"
+date: 2025-08-01
+location: "Hong Kong SAR"
 ---
 
-This is a description of a teaching experience. You can use markdown like any other post.
+Undergraduate Teaching Assistant for COMP2211 in Jul–Aug 2024 and Jul–Aug 2025.
 
-Heading 1
-======
-
-Heading 2
-======
-
-Heading 3
-======
+- Designed labs with background notes, step-by-step instructions, and reference solutions.
+- Built autograders and held office hours for ~200 students.
