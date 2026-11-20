@@ -1,0 +1,17 @@
+[
+ {
+  "t": 0.2,
+  "label": "Log an activity",
+  "line": "Pick a category, name the work, set the time."
+ },
+ {
+  "t": 12.1,
+  "label": "Journal",
+  "line": "It lands in the day, ready to review."
+ },
+ {
+  "t": 17.1,
+  "label": "Reports",
+  "line": "See where the time went."
+ }
+]

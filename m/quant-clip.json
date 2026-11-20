@@ -1,0 +1,22 @@
+[
+ {
+  "t": 0,
+  "label": "Market map",
+  "line": "See every industry and index on one map."
+ },
+ {
+  "t": 3.4,
+  "label": "Research shelf",
+  "line": "Open a broker note or expert call from one library."
+ },
+ {
+  "t": 8.6,
+  "label": "Factors",
+  "line": "Browse factors organised by idea."
+ },
+ {
+  "t": 12.2,
+  "label": "Backtests",
+  "line": "Compare strategies side by side."
+ }
+]
