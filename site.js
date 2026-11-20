@@ -32,11 +32,7 @@
   addEventListener('load', replaceAll);
   if (d.fonts && d.fonts.ready) d.fonts.ready.then(replaceAll);
 
-  /* ---------- nav: glass after 8px, scroll-spy ---------- */
-  var top = $('.top');
-  function onScroll() { top.classList.toggle('scrolled', scrollY > 8); }
-  addEventListener('scroll', onScroll, { passive: true }); onScroll();
-
+  /* ---------- nav: scroll-spy ---------- */
   var navs = $$('[data-nav]'), navLinks = [];
   navs.forEach(function (n) { $$('a', n).forEach(function (a) { navLinks.push(a); }); });
   function setNav(id) {
@@ -67,11 +63,11 @@
     } else { targets.forEach(function (el) { el.classList.add('in'); }); }
   }
 
-  /* ---------- theme switch ---------- */
+  /* ---------- theme button ---------- */
   var tsw = $('[data-theme-sw]');
   var mq = matchMedia('(prefers-color-scheme: dark)');
   function isDark() { var t = root.dataset.theme; return t ? t === 'dark' : mq.matches; }
-  function syncTheme() { tsw.setAttribute('aria-checked', isDark() ? 'true' : 'false'); }
+  function syncTheme() { var dk = isDark(); tsw.setAttribute('aria-pressed', dk ? 'true' : 'false'); tsw.setAttribute('aria-label', dk ? 'Switch to light theme' : 'Switch to dark theme'); }
   tsw.addEventListener('click', function () { var t = isDark() ? 'light' : 'dark'; root.dataset.theme = t; store.set('theme', t); syncTheme(); });
   mq.addEventListener && mq.addEventListener('change', syncTheme);
   syncTheme();
@@ -142,7 +138,7 @@
   if (typeof HTMLDialogElement === 'function') {
     var box = d.createElement('dialog');
     box.className = 'lightbox'; box.setAttribute('aria-label', 'Screen, enlarged');
-    box.innerHTML = '<button type="button" aria-label="Close">×</button><img alt=""><p></p>';
+    box.innerHTML = '<button type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button><img alt=""><p></p>';
     d.body.appendChild(box);
     var big = $('img', box), cap = $('p', box), src = null;
     var vt = typeof d.startViewTransition === 'function' && !reduce;
@@ -232,8 +228,11 @@
       if (!beats || !v.duration) return;
       chap.innerHTML = '';
       segsEl = beats.map(function (b, i) {
-        var end = i + 1 < beats.length ? beats[i + 1].t : v.duration, el = d.createElement('i');
-        el.style.flex = (end - b.t) + ' 1 0'; chap.appendChild(el); return el;
+        var end = i + 1 < beats.length ? beats[i + 1].t : v.duration, el = d.createElement('button'), lb = d.createElement('span');
+        el.type = 'button'; el.setAttribute('aria-label', 'Jump to ' + b.label); el.style.flex = (end - b.t) + ' 1 0';
+        lb.textContent = b.label; el.appendChild(lb);
+        el.addEventListener('click', function () { v.currentTime = b.t + 0.05; if (v.paused && !userPaused) startFilm(o); });
+        chap.appendChild(el); return el;
       });
     }
     function show(i) {
