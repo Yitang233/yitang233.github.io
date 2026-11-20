@@ -1,4 +1,5 @@
-/* Fonts (SIL OFL), Latin subsets in m/fonts/: Inter for text, Fraunces for titles */
+/* Fonts (SIL OFL), Latin subsets in m/fonts/: Inter for text, Fraunces for titles
+   (Fraunces pinned at opsz 72, SOFT 0, WONK 0: the 144 display cut striped at headline sizes) */
 @font-face { font-family: "Inter"; src: url("m/fonts/inter.woff2") format("woff2"); font-weight: 400 680; font-style: normal; font-display: swap; }
 @font-face { font-family: "Fraunces"; src: url("m/fonts/fraunces.woff2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
 @font-face { font-family: "Fraunces"; src: url("m/fonts/fraunces-italic.woff2") format("woff2"); font-weight: 400 600; font-style: italic; font-display: swap; }
@@ -56,8 +57,8 @@ body {
 img, video { display: block; max-width: 100%; height: auto; }
 a { color: var(--accent); text-underline-offset: 3px; }
 h1, h2, h3 { margin: 0; }
-h1, h2, .sig { font-family: var(--display); font-weight: 500; letter-spacing: -.02em; line-height: 1.08; text-wrap: balance; }
-h1 em, h2 em, .sig em { font-style: italic; font-weight: 450; color: var(--accent); }
+h1, h2, .sig { font-family: var(--display); font-weight: 450; letter-spacing: -.01em; line-height: 1.08; text-wrap: balance; }
+h1 em, h2 em, .sig em { font-style: normal; font-weight: inherit; color: var(--accent); }
 p { text-wrap: pretty; }
 ::selection { background: color-mix(in srgb, var(--accent) 28%, transparent); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -174,6 +175,7 @@ h2 { font-size: clamp(30px, 3.5vw, 44px); }
 /* section header: hairline with index and name, then title left and paragraph right */
 .sechead { position: relative; isolation: isolate; margin-bottom: clamp(24px, 3vw, 36px); }
 .sechead .motif { top: -24px; }
+.m-research, .m-about { height: 320px; } /* these headers are short, so the texture spills down behind the content */
 .rule { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 12.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-feature-settings: "kern", "tnum"; }
 .rule .l { display: inline-flex; align-items: center; gap: 10px; }
 .rule .idx { color: var(--accent); }
@@ -277,9 +279,18 @@ h2 { font-size: clamp(30px, 3.5vw, 44px); }
 .callout svg { color: var(--accent); width: 22px; height: 22px; }
 @media (min-width: 900px) { .aboutgrid { grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: start; } }
 .signoff { margin-top: clamp(44px, 6vw, 72px); }
-.sig { margin: 0; font-size: clamp(40px, 4.6vw, 60px); line-height: 1; }
+.sig { margin: 0; font-size: clamp(40px, 4.6vw, 60px); line-height: 1; font-style: italic; }
+.sig em { font-style: italic; }
 .sig > span { display: inline-block; }
-.sigline { display: block; height: 2px; margin-top: .22em; margin-bottom: 24px; max-width: 320px; background: var(--accent); transform-origin: 0 50%; border-radius: 2px; }
+/* wing rule: two stacked strokes that fade into the page; the short gray one sits next to the name, the long accent one farther out */
+.sigline { --short: linear-gradient(to right, color-mix(in srgb, var(--muted) 90%, transparent) 30%, transparent) no-repeat; --long: linear-gradient(to right, var(--accent) 0, color-mix(in srgb, var(--accent) 55%, transparent) 60%, transparent) no-repeat;
+  display: block; height: 11px; margin-top: .26em; margin-bottom: 24px; max-width: 360px; transform-origin: 0 50%;
+  background: var(--short) 0 0 / 42% 1.5px, var(--long) 0 100% / 100% 2px; }
+.signon .sigline { background: var(--long) 0 0 / 100% 2px, var(--short) 0 100% / 42% 1.5px; }
+.signon { margin-bottom: clamp(22px, 3vw, 34px); }
+.signon .sigline { margin: 0 0 .45em; max-width: 240px; height: 9px; }
+/* top name is a byline: clearly smaller than the headline so the two never compete */
+.signon .sig { font-size: clamp(26px, 2.7vw, 34px); letter-spacing: 0; }
 .signoff .cta { margin-top: 0; }
 .foot { padding-top: 28px; padding-bottom: 28px; color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
 .foot p { margin: 0; }
@@ -310,7 +321,7 @@ body.lb .dock { transform: translate(-50%, 140%); opacity: 0; }
 /* fallback (no scroll-driven animations): the observer adds .in */
 .js:not(.sda) .rv { transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out), filter 800ms var(--ease-out); transition-delay: var(--st, 0ms); }
 .js:not(.sda) .rv.in { opacity: 1; transform: none; filter: none; }
-.js:not(.sda) .sigline { transform: scaleX(0); transition: transform 1200ms var(--ease-out) 300ms; }
+.js:not(.sda) .signoff .sigline { transform: scaleX(0); transition: transform 1200ms var(--ease-out) 300ms; }
 .js:not(.sda) .signoff.in .sigline { transform: none; }
 .js:not(.sda) .film, .js:not(.sda) .tour .stage { transform: scale(.93); transition: transform 1000ms var(--ease-out); }
 .js:not(.sda) .film.in, .js:not(.sda) .tour.in .stage { transform: none; }
@@ -324,7 +335,7 @@ body.lb .dock { transform: translate(-50%, 140%); opacity: 0; }
 .js.sda .film { animation: filmin linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
 .js.sda .tour .stage { animation: stagein linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
 .js.sda .band::before { animation: wash linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
-.js.sda .sigline { animation: draw linear both; animation-timeline: view(); animation-range: entry 30% entry 110%; }
+.js.sda .signoff .sigline { animation: draw linear both; animation-timeline: view(); animation-range: entry 30% entry 110%; }
 .cols > :nth-child(2) { --k: 1; } .rows { --k: 2; }
 .papers .paper:nth-child(2) { --st: 80ms; } .papers .paper:nth-child(3) { --st: 160ms; }
 
