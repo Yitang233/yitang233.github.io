@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   /* Visitor counter: GoatCounter (open source, no cookies). Put the site code here, e.g. 'yitang233'. Empty = off. */
-  var GC_CODE = '';
+  var GC_CODE = 'muxidixi';
 
   var d = document, root = d.documentElement;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -80,23 +80,52 @@
     b.addEventListener('click', function () { location.href = 'mailto:' + rev(mailParts[0]) + '@' + rev(mailParts[1]) + '.' + rev(mailParts[2]); });
   });
 
-  /* ---------- visitors: GoatCounter, no cookies; the count in the footer ---------- */
-  if (GC_CODE && /^[a-z0-9-]+$/.test(GC_CODE)) {
+  /* ---------- visitors: GoatCounter stores each page view privately, no cookies; the footer shows one total ---------- */
+  var local = /^(localhost|127\.0\.0\.1|\[::1\]|.*\.localhost)$/.test(location.hostname);
+  if (GC_CODE && /^[a-z0-9-]+$/.test(GC_CODE) && !local) {
     var gcHost = 'https://' + GC_CODE + '.goatcounter.com';
     var dnt = navigator.doNotTrack === '1' || window.doNotTrack === '1';
-    if (!dnt && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    if (!dnt) {
       var gs = d.createElement('script');
       gs.async = true; gs.src = 'https://gc.zgo.at/count.v5.js'; gs.crossOrigin = 'anonymous';
       gs.integrity = 'sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ';
       gs.setAttribute('data-goatcounter', gcHost + '/count');
       d.head.appendChild(gs);
     }
+    /* one public number: TOTAL.json returns {"count": "1,204"} (page views, formatted, cached up to 4 h) */
     var cnt = $('[data-count]');
     if (cnt && window.fetch) {
       fetch(gcHost + '/counter/TOTAL.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
-        if (j && j.count) { $('span', cnt).textContent = j.count; cnt.hidden = false; }
+        var n = j && parseInt(String(j.count).replace(/\D/g, ''), 10);
+        if (n > 0) { $('b', cnt).textContent = n.toLocaleString('en-US'); cnt.hidden = false; }
       }).catch(function () {});
     }
+  }
+
+  /* ---------- readers map: v/visitors.json (country totals, written daily by .github/workflows/visitors.yml) ---------- */
+  var rd = $('[data-readers]');
+  if (rd && window.fetch) {
+    Promise.all([fetch('v/visitors.json').then(function (r) { return r.ok ? r.json() : null; }), fetch('v/world.json').then(function (r) { return r.ok ? r.json() : null; })]).then(function (a) {
+      var vis = a[0], w = a[1];
+      if (!vis || !w || !vis.countries || !vis.countries.length) return;
+      var NS = 'http://www.w3.org/2000/svg', svg = $('.rmap', rd), by = {}, max = 0;
+      vis.countries.forEach(function (c) { by[c.c] = c.v; if (c.v > max) max = c.v; });
+      svg.setAttribute('viewBox', '0 0 ' + w.w + ' ' + w.h);
+      Object.keys(w.c).forEach(function (k) {
+        var p = d.createElementNS(NS, 'path'), v = by[k] || 0;
+        p.setAttribute('d', w.c[k].d);
+        p.setAttribute('class', v ? 'on l' + (1 + Math.min(3, Math.floor(4 * Math.sqrt(v / max) - 1e-9))) : 'off');
+        if (v) { var t = d.createElementNS(NS, 'title'); t.textContent = w.c[k].n + ': ' + v.toLocaleString('en-US') + (v === 1 ? ' view' : ' views'); p.appendChild(t); }
+        svg.appendChild(p);
+      });
+      var ol = $('.rlist', rd);
+      vis.countries.slice(0, 6).forEach(function (c) {
+        var li = d.createElement('li'), n = d.createElement('span'), b = d.createElement('b');
+        n.textContent = c.n; b.textContent = c.v.toLocaleString('en-US');
+        li.appendChild(n); li.appendChild(b); ol.appendChild(li);
+      });
+      rd.hidden = false;
+    }).catch(function () {});
   }
 
   /* ---------- tour ---------- */

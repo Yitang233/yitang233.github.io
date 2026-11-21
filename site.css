@@ -1,8 +1,8 @@
 /* Fonts (SIL OFL), Latin subsets in m/fonts/: Inter for text, Fraunces for titles
    (Fraunces pinned at opsz 72, SOFT 0, WONK 0: the 144 display cut striped at headline sizes) */
 @font-face { font-family: "Inter"; src: url("m/fonts/inter.woff2") format("woff2"); font-weight: 400 680; font-style: normal; font-display: swap; }
-@font-face { font-family: "Fraunces"; src: url("m/fonts/fraunces.woff2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
-@font-face { font-family: "Fraunces"; src: url("m/fonts/fraunces-italic.woff2") format("woff2"); font-weight: 400 600; font-style: italic; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url("m/fonts/fraunces.woff2?v=2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url("m/fonts/fraunces-italic.woff2?v=2") format("woff2"); font-weight: 400 600; font-style: italic; font-display: swap; }
 @font-face { font-family: "Fraunces Fallback"; src: local("Georgia"); size-adjust: 104%; ascent-override: 92%; descent-override: 24%; line-gap-override: 0%; }
 
 :root {
@@ -296,6 +296,7 @@ h2 { font-size: clamp(30px, 3.5vw, 44px); }
 .foot p { margin: 0; }
 .foot .who { font-family: var(--display); font-size: 18px; color: var(--fg); margin-right: auto; }
 .foot .count { font-feature-settings: "tnum"; }
+.foot .count b { font-family: var(--display); font-weight: 500; font-size: 18px; color: var(--accent); margin-right: .15em; }
 .totop { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--fg); border: 1px solid var(--line); text-decoration: none; transition: background-color var(--d2), transform var(--d1) var(--ease-out); }
 .totop:hover { background: var(--card); }
 .totop:active { transform: scale(.94); }
@@ -376,3 +377,17 @@ body.lb .dock { transform: translate(-50%, 140%); opacity: 0; }
   .js .rise, .js .rv { opacity: 1; transform: none; filter: none; }
   .js .film, .js .tour .stage, .js .sigline { transform: none; }
 }
+
+/* readers map */
+.readers { padding-top: clamp(32px, 4vw, 56px); padding-bottom: 8px; display: grid; gap: 16px 40px; align-items: end; }
+.readers[hidden] { display: none; }
+.readers .rtitle { font-family: var(--display); font-size: clamp(22px, 2.4vw, 28px); margin: 0; color: var(--fg); }
+.rmap { width: 100%; height: auto; display: block; }
+.rmap path { stroke: var(--bg); stroke-width: .5; stroke-linejoin: round; }
+.rmap .off { fill: var(--line); }
+.rmap .on { fill: var(--accent); }
+.rmap .l1 { opacity: .35; } .rmap .l2 { opacity: .55; } .rmap .l3 { opacity: .78; } .rmap .l4 { opacity: 1; }
+.rlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; color: var(--muted); font-size: 14px; font-feature-settings: "tnum"; }
+.rlist li { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+.rlist b { font-family: var(--display); font-weight: 500; color: var(--fg); }
+@media (min-width: 900px) { .readers { grid-template-columns: 1fr minmax(220px, 280px); } .readers .rtitle { grid-column: 1 / -1; } }
