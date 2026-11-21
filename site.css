@@ -192,40 +192,97 @@ h2 { font-size: clamp(30px, 3.5vw, 44px); }
 
 /* film: a framed, softly shadowed stage; the contrast lives inside the frame */
 .film { margin: 0 auto; max-width: 860px; padding: clamp(8px, 1.4vw, 14px); border-radius: var(--r3); background: var(--stage); box-shadow: inset 0 0 0 1px var(--stage-edge), var(--shadow); transform-origin: 50% 70%; }
-.frame { position: relative; border-radius: var(--r2); overflow: hidden; background: #14161b; aspect-ratio: 1600 / 1000; }
+.frame { position: relative; border-radius: var(--r2); overflow: hidden; background: var(--card); aspect-ratio: 1600 / 1000; }
 .frame video { width: 100%; height: 100%; object-fit: cover; transition: opacity 350ms ease; }
-.frame video.fadeout { opacity: 0; }
-.play, .snd {
-  position: absolute; bottom: 12px; height: 44px; border-radius: 999px; border: 0; display: inline-flex; align-items: center; justify-content: center;
+/* the cover: a live title (the mark draws and sways, the name types in and ripples, the pitch rises) and a Start demo button; it dissolves into the film's first frame once the film plays */
+.cover { --nd: 2s; position: absolute; inset: 0; z-index: 3; overflow: hidden; container-type: inline-size; opacity: 0; visibility: hidden; transition: opacity 700ms ease, visibility 0s 700ms; }
+.cover .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: cvdrift 16s ease-in-out infinite alternate; }
+.cover .lock { position: absolute; left: 0; right: 0; top: 21%; display: flex; flex-direction: column; align-items: center; text-align: center; --nm: 8.25cqw; }
+.film[data-film="quant"] .cover .lock { --nm: 5.1cqw; --cvsh: rgba(70, 56, 170, .30); }
+.cover .mk { width: 13.75cqw; min-width: 64px; aspect-ratio: 1; opacity: 0; transform-origin: 50% 60%; }
+.cover .mk svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 1.1cqw 1.9cqw var(--cvsh, rgba(20, 70, 74, .28))); }
+.cover .nm { margin-top: 1.6cqw; font-family: "Fraunces", Georgia, serif; font-style: italic; font-weight: 480; letter-spacing: -.025em; line-height: 1.1; font-size: max(var(--nm), 17px); color: #17383b; white-space: nowrap; }
+.film[data-film="quant"] .cover .nm { color: #27224d; }
+.cover .nm i { display: inline-block; font: inherit; white-space: pre; opacity: 0; transform: translateY(.4em); }
+.cover .pt { margin-top: 1.4cqw; font-family: "Fraunces", Georgia, serif; font-style: italic; font-size: max(2.4cqw, 11px); color: #5d6f6c; opacity: 0; }
+.film[data-film="quant"] .cover .pt { color: #676488; }
+.cover .m-a, .cover .m-b { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.cover .m-p, .cover .m-star, .cover .m-dot { transform-box: fill-box; transform-origin: center; }
+.cover .m-p, .cover .m-star { transform: scale(0); }
+.cover .start { position: absolute; left: 0; right: 0; bottom: 7%; margin: 0 auto; width: max-content; height: 52px; padding: 0 26px 0 20px; border: 0; border-radius: 999px; display: flex; align-items: center; gap: 8px; font: inherit; font-size: 16px; font-weight: 600; background: var(--accent); color: var(--btn-fg); box-shadow: 0 10px 30px -10px rgba(20, 40, 50, .45); opacity: 0; transition: transform var(--d1) var(--ease-out), filter 300ms; }
+.cover .start svg { width: 22px; height: 22px; fill: currentColor; }
+.cover .start:hover { transform: scale(1.04); }
+.cover .start:active { transform: scale(.97); }
+.cover.busy .start { filter: saturate(.4) opacity(.8); pointer-events: none; }
+.cover.go .mk { animation: cvpop .8s var(--ease-out) .1s both, cvsway 5.5s ease-in-out 1.4s infinite; }
+.cover.go .m-a, .cover.go .m-b { animation: cvdraw 1.1s ease-in-out .25s forwards; }
+.cover.go .m-p { animation: cvgrow .45s var(--ease-out) forwards; }
+.cover.go .m-p:nth-of-type(1) { animation-delay: .55s; }
+.cover.go .m-p:nth-of-type(2) { animation-delay: .8s; }
+.cover.go .m-star { animation: cvstar .6s var(--ease-out) 1.05s forwards; }
+.cover.go .m-dot { animation: cvblink 5.5s ease-in-out 1.6s infinite; }
+.cover.go .nm i { animation: cvtype .55s var(--ease-out) forwards, cvwave 3.8s ease-in-out infinite; }
+.cover.go .pt { animation: cvfade .9s ease calc(var(--nd) - .6s) forwards; }
+.cover.go .start { animation: cvfade .8s ease calc(var(--nd) + .1s) forwards; }
+@keyframes cvdrift { from { transform: scale(1.03) translate(-.8%, -.6%); } to { transform: scale(1.09) translate(.8%, .6%); } }
+@keyframes cvpop { from { opacity: 0; transform: scale(.82) translateY(1.5cqw); } to { opacity: 1; transform: none; } }
+@keyframes cvsway { 0%, 100% { transform: rotate(-2.5deg) translateY(0); } 50% { transform: rotate(2.5deg) translateY(-1.1cqw); } }
+@keyframes cvdraw { to { stroke-dashoffset: 0; } }
+@keyframes cvgrow { to { transform: scale(1); } }
+@keyframes cvstar { from { transform: scale(0) rotate(-40deg); } to { transform: scale(1) rotate(0); } }
+@keyframes cvblink { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+@keyframes cvtype { to { opacity: 1; transform: none; } }
+@keyframes cvwave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-.07em); } }
+@keyframes cvfade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.cover-on .cover { opacity: 1; visibility: visible; transition: none; }
+.film .ctl, .film .fsub { transition: opacity 500ms ease 250ms; }
+.cover-on .ctl, .cover-on .fsub { opacity: 0; pointer-events: none; transition: none; }
+.ctl { position: absolute; z-index: 2; right: 12px; bottom: 12px; display: flex; gap: 8px; }
+.play, .snd, .sbt {
+  position: relative; height: 44px; border-radius: 999px; border: 0; display: inline-flex; align-items: center; justify-content: center;
   background: rgba(20, 20, 26, .58); color: #fff; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
   transition: transform var(--d1) var(--ease-out), background-color var(--d2);
 }
-.play:hover, .snd:hover { background: rgba(20, 20, 26, .78); }
+.play:hover, .snd:hover, .sbt:hover { background: rgba(20, 20, 26, .78); }
 .snd.on:hover { background: color-mix(in srgb, var(--accent) 85%, #000); }
-.play { right: 12px; width: 44px; }
-.snd { right: 64px; gap: 8px; padding: 0 16px 0 12px; font-size: 14px; font-weight: 560; }
+.play { width: 44px; }
+.snd, .sbt { gap: 8px; padding: 0 16px 0 12px; font-size: 14px; font-weight: 560; }
+.sbt { color: rgba(255, 255, 255, .72); }
+.sbt.on { color: #fff; }
 .snd.on { background: var(--accent); color: var(--btn-fg); }
-.snd svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
+.snd svg, .sbt svg { width: 22px; height: 22px; fill: currentColor; flex: none; }
 .snd .w1, .snd .w2 { display: none; }
 .snd.on .w1, .snd.on .w2 { display: inline; }
 .snd.on .x { display: none; }
-.play:active, .snd:active { transform: scale(.95); }
+.play:active, .snd:active, .sbt:active { transform: scale(.95); }
 .play svg { width: 22px; height: 22px; fill: currentColor; }
 .play .i-play { display: none; }
 .play.paused .i-play { display: block; }
 .play.paused .i-pause { display: none; }
-.bar { margin: 14px 6px 0; }
-.chap { display: flex; gap: 6px; min-width: 0; }
-.chap button { position: relative; min-width: 0; min-height: 22px; padding: 12px 0 0; border: 0; background: none; text-align: left; font-size: 13px; font-weight: 540; color: var(--muted); line-height: 1.3; transition: color var(--d2); }
-.chap button:hover { color: var(--fg); }
-.chap button span { display: none; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* subtitles over the frame: above the buttons, on a soft scrim, changing by opacity only */
+.fsub { text-align: center; position: absolute; z-index: 1; left: 12px; right: 12px; bottom: 68px; pointer-events: none; }
+.fsub span { display: inline-block; max-width: 100%; padding: .3em .7em; border-radius: 10px; background: rgba(12, 13, 17, .62); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: #fff; font-size: 15px; font-weight: 520; line-height: 1.35; text-wrap: balance; opacity: 0; transition: opacity 400ms ease; }
+.fsub.on span { opacity: 1; }
+.nosub .fsub { display: none; }
+@media (min-width: 720px) { .fsub { left: 20px; right: 20px; bottom: 72px; } .fsub span { font-size: 18px; } }
+@media (min-width: 1100px) { .fsub span { font-size: 22px; } }
+/* chapter bar: proportional to each clip; scrolls sideways when the labels do not fit */
+.bar { margin: 14px 0 0; }
+.chap { display: flex; gap: 6px; min-width: 0; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; padding: 0 6px; }
+.chap::-webkit-scrollbar { display: none; }
+.chap button { position: relative; flex: 1 0 auto; min-width: 104px; min-height: 44px; padding: 14px 0 6px; border: 0; background: none; text-align: left; font-size: 13px; font-weight: 540; color: var(--muted); line-height: 1.3; transition: color var(--d2); }
+.chap button:hover, .chap button[aria-current] { color: var(--fg); }
+.chap button span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chap button::before, .chap button::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 2px; }
 .chap button::before { background: var(--seg); }
 .chap button::after { background: var(--fg); transform: scaleX(var(--p, 0)); transform-origin: 0 50%; opacity: .8; }
-@media (min-width: 720px) { .chap button span { display: block; } .chap button { padding-top: 14px; } }
-.cap { margin: 8px 6px 0; min-height: 3em; font-size: 15px; color: var(--muted); transition: opacity var(--d2); text-align: left; max-width: 44em; }
-.cap b { color: var(--fg); font-weight: 620; margin-right: 6px; }
-.cap.swap { opacity: 0; }
+@media (min-width: 720px) { .chap button { min-width: 72px; padding-right: 4px; } }
+/* the same chapters and lines as text: for screen readers; shown in full under reduced motion */
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.chl { margin: 14px 6px 0; font-size: 15px; color: var(--muted); max-width: 44em; }
+.chl ol { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; }
+.chl b { color: var(--fg); font-weight: 620; }
+.chl ul { margin: 2px 0 0; padding-left: 1.1em; }
 
 /* tour */
 .tour { margin: clamp(28px, 4vw, 44px) auto 0; max-width: 860px; }
@@ -313,26 +370,26 @@ h2 { font-size: clamp(30px, 3.5vw, 44px); }
 body.lb .dock { transform: translate(-50%, 140%); opacity: 0; }
 
 /* ---------- motion (JS marks the page; nothing is hidden before that) ---------- */
-.js .rise { opacity: 0; transform: translateY(14px); filter: blur(6px); animation: rise 900ms var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 90ms + 80ms); }
+/* Text floats up from a light blur, fast: a short rise and a little blur, once per element. JS adds .in when it comes into view
+   (the top of the page plays on load) and .done when it has finished. */
+.js .rise, .js .rv { opacity: 0; transform: translateY(14px); filter: blur(6px); }
+.js .rise { animation: fog 800ms var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms + 80ms); }
+.js .rv.in { animation: fog 700ms var(--ease-out) both; animation-delay: var(--st, 0ms); }
+.js .rise.done, .js .rv.done { animation: none; opacity: 1; transform: none; filter: none; -webkit-mask: none; mask: none; }
 .d0 { --i: 0; } .d1 { --i: 1; } .d2 { --i: 2; } .d3 { --i: 3; } .d4 { --i: 4; } .d5 { --i: 5; }
-@keyframes rise { to { opacity: 1; transform: none; filter: none; } }
+@keyframes fog { to { opacity: 1; transform: none; filter: none; } }
 
-/* the reveal: opacity, a 12 px rise and a little blur, line by line */
-.js .rv { opacity: 0; transform: translateY(12px); filter: blur(6px); }
+/* (text reveals: see the fog above; the rest of the scroll-driven pieces follow) */
 /* fallback (no scroll-driven animations): the observer adds .in */
-.js:not(.sda) .rv { transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out), filter 800ms var(--ease-out); transition-delay: var(--st, 0ms); }
-.js:not(.sda) .rv.in { opacity: 1; transform: none; filter: none; }
 .js:not(.sda) .signoff .sigline { transform: scaleX(0); transition: transform 1200ms var(--ease-out) 300ms; }
 .js:not(.sda) .signoff.in .sigline { transform: none; }
 .js:not(.sda) .film, .js:not(.sda) .tour .stage { transform: scale(.93); transition: transform 1000ms var(--ease-out); }
 .js:not(.sda) .film.in, .js:not(.sda) .tour.in .stage { transform: none; }
 
-@keyframes rvin { from { opacity: 0; transform: translateY(12px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes filmin { from { transform: scale(.88); } to { transform: scale(1); } }
 @keyframes stagein { from { transform: translateY(36px) scale(.96); } to { transform: none; } }
 @keyframes wash { 0% { opacity: 0; } 28% { opacity: 1; } 72% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.js.sda .rv { animation: rvin linear both; animation-timeline: view(); animation-range: entry calc(4% + var(--k, 0) * 9%) entry calc(52% + var(--k, 0) * 9%); }
 .js.sda .film { animation: filmin linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
 .js.sda .tour .stage { animation: stagein linear both; animation-timeline: view(); animation-range: entry 0% entry 80%; }
 .js.sda .band::before { animation: wash linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
@@ -357,8 +414,8 @@ body.lb .dock { transform: translate(-50%, 140%); opacity: 0; }
   .tour .seg > button { padding: 0 11px; font-size: 14px; }
   .chips { flex-direction: column; align-items: flex-start; gap: 8px; }
   .chips li { padding: 0; border: 0 !important; }
-  .snd .st { display: none; }
-  .snd { padding: 0 12px; }
+  .snd .st, .sbt .st { display: none; }
+  .snd, .sbt { padding: 0 12px; }
 }
 
 @media (min-width: 720px) {
@@ -374,8 +431,9 @@ body.lb .dock { transform: translate(-50%, 140%); opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: 0s !important; transition-delay: 0s !important; }
-  .js .rise, .js .rv { opacity: 1; transform: none; filter: none; }
+  .js .rise, .js .rv { opacity: 1; transform: none; filter: none; -webkit-mask: none; mask: none; }
   .js .film, .js .tour .stage, .js .sigline { transform: none; }
+  .fsub { display: none; }
 }
 
 /* readers map */

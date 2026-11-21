@@ -52,14 +52,30 @@
     new IntersectionObserver(function (e) { dock.classList.toggle('away', e[0].isIntersecting); }, { threshold: 0.6 }).observe(end);
   }
 
-  /* ---------- reveals: scroll-driven in CSS where supported, observer fallback otherwise ---------- */
+  /* ---------- reveals: text lifts out of a fog (rises, loses its blur, wiped in from the bottom up). Time-based, once per element,
+     in a short cascade from the top of what has just come into view. The page's top plays on load. ---------- */
+  $$('.rtitle, .rlist, .sig, .who').forEach(function (el) { if (!el.closest('.rv, .rise')) el.classList.add('rv'); });
+  $$('.rv, .rise').forEach(function (el) {
+    el.addEventListener('animationend', function (e) { if (e.target === el && e.animationName === 'fog') el.classList.add('done'); });   // drops the mask so shadows and borders are never clipped
+  });
+  var fogs = $$('.rv');
+  if ('IntersectionObserver' in window && !reduce) {
+    var fio = new IntersectionObserver(function (es) {
+      var n = 0;
+      es.filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; })
+        .forEach(function (e) { e.target.style.setProperty('--st', Math.min(n++, 4) * 70 + 'ms'); e.target.classList.add('in'); fio.unobserve(e.target); });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    fogs.forEach(function (el) { fio.observe(el); });
+  } else { fogs.forEach(function (el) { el.classList.add('in', 'done'); }); }
+  // The frames, the tour and the sign-off keep their own motion: scroll-driven where supported, an observer otherwise.
   if (!sda) {
-    var targets = $$('.rv, .film, .tour, .signoff');
+    var targets = $$('.film, .tour, .signoff');
     if ('IntersectionObserver' in window && !reduce) {
       var io = new IntersectionObserver(function (es) {
         es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
       }, { rootMargin: '0px 0px -10% 0px', threshold: 0.08 });
-      targets.forEach(function (el, i) { if (el.classList.contains('rv')) el.style.setProperty('--st', (i % 4) * 70 + 'ms'); io.observe(el); });
+      targets.forEach(function (el) { io.observe(el); });
     } else { targets.forEach(function (el) { el.classList.add('in'); }); }
   }
 
@@ -196,6 +212,13 @@
 
   /* ---------- films: the music is inside each clip. One Sound state for both films. ---------- */
   var films = $$('[data-film]'), items = [], soundOn = false;
+  // The cover's live title: the product's mark (a flat redrawing of its icon, parts classed so CSS can draw them on), its name and its pitch.
+  var COVERS = {
+    flow: { name: 'Flow', pitch: 'A private activity journal and planner for focused weeks.',
+      mark: '<svg viewBox="0 0 220 220" aria-hidden="true"><defs><linearGradient id="cvfg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c5a5f"/><stop offset="1" stop-color="#2f8a86"/></linearGradient><clipPath id="cvfc"><rect width="220" height="220" rx="52"/></clipPath></defs><rect width="220" height="220" rx="52" fill="url(#cvfg)"/><g clip-path="url(#cvfc)" fill="none" stroke-linecap="round"><path class="m-a" pathLength="1" d="M124 78 C 88 104, 150 132, 112 162 S 70 214, 96 236" stroke="#bff0df" stroke-width="30" opacity=".35"/><path class="m-b" pathLength="1" d="M124 78 C 88 104, 150 132, 112 162 S 70 214, 96 236" stroke="#d9fbef" stroke-width="13"/></g><circle class="m-dot" cx="128" cy="62" r="17" fill="#f7cd7c"/></svg>' },
+    quant: { name: 'Quantitative Research Platform', pitch: 'Every research desk, in one app.',
+      mark: '<svg viewBox="0 0 220 220" aria-hidden="true"><defs><linearGradient id="cvqg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a69e6"/><stop offset="1" stop-color="#5140b4"/></linearGradient></defs><rect width="220" height="220" rx="52" fill="url(#cvqg)"/><path class="m-b" pathLength="1" d="M52 152 L 92 118 L 124 134 L 160 86" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><circle class="m-dot" cx="52" cy="152" r="11" fill="#fff"/><circle class="m-p" cx="92" cy="118" r="9" fill="#fff"/><circle class="m-p" cx="124" cy="134" r="9" fill="#fff"/><path class="m-star" d="M166 38 C 168 54, 172 58, 188 60 C 172 62, 168 66, 166 82 C 164 66, 160 62, 144 60 C 160 58, 164 54, 166 38 Z" fill="#ffe9a8"/></svg>' }
+  };
   function fade(o, to, done) {
     var v = o.v; clearInterval(o.fx);
     if (reduce) { v.volume = to; if (done) done(); return; }
@@ -240,12 +263,43 @@
     });
   }
 
+  var subsOn = true, CARD = 2.0, REST = 0.4, FADE = 400;   // CARD and REST are only fall-backs for film data without take and end
+  function paintSubs() {
+    items.forEach(function (o) {
+      o.film.classList.toggle('nosub', !subsOn);
+      o.sbt.classList.toggle('on', subsOn);
+      var t = subsOn ? 'Subtitles on' : 'Subtitles off';
+      $('.st', o.sbt).textContent = t; o.sbt.setAttribute('aria-label', t);
+    });
+  }
+
   films.forEach(function (film) {
-    var name = film.dataset.film, v = $('video', film), btn = $('.play', film), snd = $('.snd', film), bar = $('.bar', film), chap = $('.chap', film), cap = $('.cap', film);
-    var beats = null, userPaused = false, last = -1, segsEl = [], o = { v: v, snd: snd, visible: false, fx: 0 };
+    var name = film.dataset.film, v = $('video', film), btn = $('.play', film), snd = $('.snd', film), sbt = $('.sbt', film), sub = $('.fsub span', film), bar = $('.bar', film), chap = $('.chap', film), chl = $('.chl', film);
+    var beats = null, legacy = false, userPaused = false, last = -1, line = null, segsEl = [], tm = 0, o = { v: v, film: film, snd: snd, sbt: sbt, visible: false, fx: 0 };
     items.push(o);
     snd.addEventListener('click', function () { setSound(!soundOn); });
-    if (!reduce) { v.controls = false; btn.hidden = false; bar.hidden = false; snd.hidden = false; }
+    sbt.addEventListener('click', function () { subsOn = !subsOn; paintSubs(); });
+    if (!reduce) { v.controls = false; btn.hidden = false; bar.hidden = false; snd.hidden = false; sbt.hidden = false; }
+    paintSubs();
+
+    // The cover: the film's poster with a Start button. Nothing plays until the visitor asks; once the film is running the cover
+    // dissolves into its first frame (CSS, 700 ms). Without script, or with reduced motion, the native poster and controls stay.
+    var started = false;
+    if (!reduce && 'IntersectionObserver' in window) {
+      var C = COVERS[name], cover = d.createElement('div'), n = C.name.length, letters = '';
+      C.name.split('').forEach(function (ch, i) { letters += '<i>' + (ch === ' ' ? ' ' : ch) + '</i>'; });
+      cover.className = 'cover'; cover.style.setProperty('--nd', (1 + n * 0.045 + 0.5).toFixed(2) + 's');   // when the name has finished typing
+      cover.innerHTML = '<img class="bg" alt="" src="m/' + name + '-cover-1600.webp"><div class="lock"><span class="mk">' + C.mark + '</span><span class="nm" aria-hidden="true">' + letters + '</span><span class="pt">' + C.pitch + '</span></div>' +
+        '<button type="button" class="start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Start demo</span></button>';
+      // Per-letter timing goes through the style object (the page's content policy does not allow inline style attributes).
+      Array.prototype.forEach.call(cover.querySelectorAll('.nm i'), function (el, i) { el.style.animationDelay = (1 + i * 0.045).toFixed(3) + 's,' + (1.1 + n * 0.045 + i * 0.11).toFixed(3) + 's'; });
+      $('.frame', film).appendChild(cover); film.classList.add('cover-on');
+      $('.start', cover).addEventListener('click', function () { cover.classList.add('busy'); userPaused = false; startFilm(o); });
+      // The title animates when the cover scrolls into view, not at page load.
+      var cio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { cover.classList.add('go'); cio.disconnect(); } }, { threshold: 0.35 });
+      cio.observe(cover);
+    }
+    v.addEventListener('playing', function () { started = true; film.classList.remove('cover-on'); });
 
     function sync() { var p = v.paused; btn.classList.toggle('paused', p); btn.setAttribute('aria-label', p ? 'Play' : 'Pause'); }
     btn.addEventListener('click', function () {
@@ -253,36 +307,98 @@
     });
     v.addEventListener('play', sync); v.addEventListener('pause', sync); sync();
 
+    function takeOf(b) { return b.take != null ? b.take : b.t + CARD; }
+    function endOf(i) { return i + 1 < beats.length ? beats[i + 1].t : v.duration; }
     function build() {
-      if (!beats || !v.duration) return;
+      if (!beats) return;
       chap.innerHTML = '';
       segsEl = beats.map(function (b, i) {
-        var end = i + 1 < beats.length ? beats[i + 1].t : v.duration, el = d.createElement('button'), lb = d.createElement('span');
-        el.type = 'button'; el.setAttribute('aria-label', 'Jump to ' + b.label); el.style.flex = (end - b.t) + ' 1 0';
+        var el = d.createElement('button'), lb = d.createElement('span');
+        el.type = 'button'; el.setAttribute('aria-label', 'Jump to ' + b.headline); el.style.flex = (v.duration ? endOf(i) - b.t : 1) + ' 0 auto';
         lb.textContent = b.label; el.appendChild(lb);
         el.addEventListener('click', function () { v.currentTime = b.t + 0.05; if (v.paused && !userPaused) startFilm(o); });
         chap.appendChild(el); return el;
       });
+      last = -1; tick();
+    }
+    // The same chapters and lines as plain text: for screen readers, and shown in full under reduced motion.
+    function text() {
+      var ol = d.createElement('ol');
+      beats.forEach(function (b) {
+        var li = d.createElement('li'), h = d.createElement('b'), ul = d.createElement('ul');
+        h.textContent = b.headline; li.appendChild(h);
+        b.steps.forEach(function (s) { var l = d.createElement('li'); l.textContent = s.line; ul.appendChild(l); });
+        li.appendChild(ul); ol.appendChild(li);
+      });
+      chl.innerHTML = ''; chl.appendChild(ol);
+      if (reduce) chl.classList.remove('vh');
+    }
+    // A line fades in and out through opacity only. Lines carry their own end and a rest between them in the data; if one
+    // line still follows another at once, the old one fades out first, then the new one fades in.
+    function setLine(s) {
+      if (s === line) return; line = s;
+      clearTimeout(tm);
+      var box = sub.parentNode, wasOn = box.classList.contains('on');
+      box.classList.remove('on');
+      if (s === null) return;
+      function put() { if (line === s) { sub.textContent = s; box.classList.add('on'); } }
+      if (reduce) put(); else if (wasOn) tm = setTimeout(put, FADE); else put();
     }
     function show(i) {
       if (i === last) return; last = i;
-      cap.classList.add('swap');
-      setTimeout(function () { cap.innerHTML = ''; var b = d.createElement('b'); b.textContent = beats[i].label; cap.appendChild(b); cap.appendChild(d.createTextNode(beats[i].line)); cap.classList.remove('swap'); }, reduce ? 0 : 150);
+      segsEl.forEach(function (el, k) { if (k === i) el.setAttribute('aria-current', 'true'); else el.removeAttribute('aria-current'); });
+      // Keep the current chapter in view when the bar scrolls (a phone).
+      var el = segsEl[i];
+      if (el && chap.scrollWidth > chap.clientWidth) {
+        var to = Math.max(0, el.offsetLeft - (chap.clientWidth - el.offsetWidth) / 2);
+        try { chap.scrollTo({ left: to, behavior: reduce ? 'auto' : 'smooth' }); } catch (e) { chap.scrollLeft = to; }
+      }
     }
-    fetch('m/' + name + '-clip.json').then(function (r) { return r.json(); }).then(function (j) { beats = j; build(); show(0); }).catch(function () { beats = null; });
-    v.addEventListener('loadedmetadata', build);
-    v.addEventListener('timeupdate', function () {
-      if (!beats || !v.duration) return;
-      var t = v.currentTime, i = 0;
-      // Soften the picture loop: the last and first moments fade through the frame colour.
-      if (!reduce) v.classList.toggle('fadeout', v.duration - t < 0.45 || t < 0.12);
-      beats.forEach(function (b, k) { if (t >= b.t) i = k; });
-      show(i);
-      segsEl.forEach(function (el, k) {
-        var s = beats[k].t, e = k + 1 < beats.length ? beats[k + 1].t : v.duration;
-        el.style.setProperty('--p', Math.max(0, Math.min(1, (t - s) / (e - s))).toFixed(3));
+    // Chapters in the new shape; until the new films arrive, the old clip file is read as one-line chapters.
+    function load() {
+      return fetch('m/' + name + '-film.json').then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (j) {
+        if (!Array.isArray(j) || !j.length) throw 0; return j;
+      }).catch(function () {
+        return fetch('m/' + name + '-clip.json').then(function (r) { return r.json(); }).then(function (j) {
+          legacy = true;
+          return j.map(function (b, i) { return { t: b.t, id: 'c' + i, label: b.label, headline: b.label, steps: [{ t: b.t, line: b.line }] }; });
+        });
       });
-    });
+    }
+    load().then(function (j) {
+      beats = j; build(); text(); show(0); tick();
+      if (!legacy) {
+        var tr = d.createElement('track');
+        tr.kind = 'captions'; tr.srclang = 'en'; tr.label = 'English'; tr.src = 'm/' + name + '-film.vtt';
+        if (reduce) tr.default = true;
+        v.appendChild(tr);
+        if (!reduce) tr.mode = 'disabled'; // our own overlay draws the lines; the track is for the native controls
+      }
+    }).catch(function () { beats = null; });
+    v.addEventListener('loadedmetadata', build);
+    function tick() {
+      if (!beats || !v.duration) return;
+      var t = v.currentTime, i = 0, s = null, k, st;
+      beats.forEach(function (b, n) { if (t >= b.t) i = n; });
+      show(i);
+      // A line shows only between its own start and end (never over a title card: its first line starts after the card).
+      st = beats[i].steps;
+      for (k = 0; k < st.length; k++) {
+        var e = st[k].end != null ? st[k].end : (k + 1 < st.length ? st[k + 1].t - REST : endOf(i));
+        if (t >= st[k].t && t < e && (legacy || t >= takeOf(beats[i]))) s = st[k].line;
+      }
+      setLine(s);
+      segsEl.forEach(function (el, n) {
+        var a = beats[n].t, e = endOf(n);
+        el.style.setProperty('--p', Math.max(0, Math.min(1, (t - a) / (e - a))).toFixed(3));
+      });
+    }
+    v.addEventListener('timeupdate', tick);
+    // timeupdate is too coarse for subtitles: follow the frame clock while the film plays.
+    var raf = 0;
+    function loop() { tick(); raf = v.paused ? 0 : requestAnimationFrame(loop); }
+    v.addEventListener('play', function () { if (!raf) raf = requestAnimationFrame(loop); });
+    v.addEventListener('seeked', tick);
 
     if (reduce || !('IntersectionObserver' in window)) { v.controls = true; return; }
     // A film plays only while it is on screen, so only the film in view is heard.
@@ -291,7 +407,7 @@
         o.visible = e.isIntersecting;
         if (e.isIntersecting) {
           if (v.preload !== 'auto') v.preload = 'auto';
-          if (!userPaused) startFilm(o);
+          if (started && !userPaused) startFilm(o);   // a film the visitor has started resumes when it scrolls back; one they have not started waits on its cover
         } else { clearInterval(o.fx); v.pause(); }
       });
     }, { threshold: 0.5 }).observe(v);
